@@ -68,17 +68,21 @@ public final class CurrencyProviderTool {
     }
 
     private void print0(final Set<Locale> locales) {
-        this.print("static void register() {");
         this.indent();
         {
-            locales.stream()
-                    .flatMap(this::getCurrencyIfSupported)
-                    .sorted(CurrencyProviderTool::compare)
-                    .distinct()
-                    .forEach(c -> this.printCurrency(c, locales));
+            this.print("static void register() {");
+            this.indent();
+            {
+                locales.stream()
+                        .flatMap(this::getCurrencyIfSupported)
+                        .sorted(CurrencyProviderTool::compare)
+                        .distinct()
+                        .forEach(c -> this.printCurrency(c, locales));
+            }
             this.outdent();
             this.print("}");
         }
+        this.outdent();
     }
 
     private Stream<Currency> getCurrencyIfSupported(final Locale locale) {

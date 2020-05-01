@@ -19,5 +19,6 @@ package walkingkooka.j2cl.java.util.currency;
 
 public final class CurrencyProvider {
 
-    $ALL
+$ALL
+
 }
