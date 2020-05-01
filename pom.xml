@@ -88,18 +88,6 @@
             <artifactId>j2cl-locale</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>walkingkooka</groupId>
-            <artifactId>j2cl-uber</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>walkingkooka</groupId>
-            <artifactId>walkingkooka-text-printer</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>
