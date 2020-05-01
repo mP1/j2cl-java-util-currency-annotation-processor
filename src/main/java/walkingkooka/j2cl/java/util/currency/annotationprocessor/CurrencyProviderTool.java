@@ -121,7 +121,7 @@ public final class CurrencyProviderTool {
         }
 
         this.print();
-        symbolToLocales.forEach((k, v) -> this.print("// " + k + "=" + v));
+        symbolToLocales.forEach((k, v) -> this.print("// " + k + "=" + v.stream().map(Locale::toLanguageTag).collect(Collectors.joining(", "))));
 
         String most = null;
         int mostCount = 0;

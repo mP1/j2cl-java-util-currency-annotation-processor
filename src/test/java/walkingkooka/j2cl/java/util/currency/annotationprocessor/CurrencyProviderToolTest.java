@@ -30,7 +30,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
     @Test
     public void testCurrencyDEWildcard() {
         final String expected = "  static void register() {\n" +
-                "    // CHF=[de, de_AT, de_BE, de_CH, de_DE, de_LI, de_LU]\n" +
+                "    // CHF=de, de-AT, de-BE, de-CH, de-DE, de-LI, de-LU\n" +
                 "    Currency.register(\"CHF\",\n" +
                 "      2, // defaultFractionDigits\n" +
                 "      756, // numericCode\n" +
@@ -38,8 +38,8 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                 "      \"de-CH,de-LI\", // locales\n" +
                 "      \"CHF,de,de-AT,de-BE,de-CH,de-DE,de-LI,de-LU\" // symbolToLocales\n" +
                 "    );\n" +
-                "    // EUR=[de_CH, de_LI]\n" +
-                "    // €=[de, de_AT, de_BE, de_DE, de_LU]\n" +
+                "    // EUR=de-CH, de-LI\n" +
+                "    // €=de, de-AT, de-BE, de-DE, de-LU\n" +
                 "    Currency.register(\"EUR\",\n" +
                 "      2, // defaultFractionDigits\n" +
                 "      978, // numericCode\n" +
@@ -55,7 +55,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
     @Test
     public void testCurrencyENAU() {
         final String expected = "  static void register() {\n" +
-                "    // $=[en_AU]\n" +
+                "    // $=en-AU\n" +
                 "    Currency.register(\"AUD\",\n" +
                 "      2, // defaultFractionDigits\n" +
                 "      36, // numericCode\n" +
