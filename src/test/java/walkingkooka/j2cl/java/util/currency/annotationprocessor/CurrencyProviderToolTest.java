@@ -29,40 +29,40 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
 
     @Test
     public void testCurrencyDEWildcard() {
-        final String expected = "  static void register() {\n" +
+        final String expected = "  static void register(final java.util.function.Consumer<CurrencyProvider> registry) {\n" +
                 "    // CHF=de, de-AT, de-BE, de-CH, de-DE, de-LI, de-LU\n" +
-                "    Currency.register(\"CHF\",\n" +
+                "    registry.accept(new CurrencyProvider(\"CHF\",\n" +
                 "      2, // defaultFractionDigits\n" +
                 "      756, // numericCode\n" +
                 "      \"CHF\", // defaultSymbol\n" +
                 "      \"de-CH,de-LI\", // locales\n" +
                 "      \"CHF,de,de-AT,de-BE,de-CH,de-DE,de-LI,de-LU\" // symbolToLocales\n" +
-                "    );\n" +
+                "    ));\n" +
                 "    // EUR=de-CH, de-LI\n" +
                 "    // €=de, de-AT, de-BE, de-DE, de-LU\n" +
-                "    Currency.register(\"EUR\",\n" +
+                "    registry.accept(new CurrencyProvider(\"EUR\",\n" +
                 "      2, // defaultFractionDigits\n" +
                 "      978, // numericCode\n" +
                 "      \"€\", // defaultSymbol\n" +
                 "      \"de-AT,de-BE,de-DE,de-LU\", // locales\n" +
                 "      \"EUR,de-CH,de-LI\", // symbolToLocales\n" +
                 "      \"€,de,de-AT,de-BE,de-DE,de-LU\" // symbolToLocales\n" +
-                "    );\n" +
+                "    ));\n" +
                 "  }";
         assertEquals(expected, CurrencyProviderTool.generateMethod(WalkingkookaLanguageTag.all("DE*")));
     }
 
     @Test
     public void testCurrencyENAU() {
-        final String expected = "  static void register() {\n" +
+        final String expected = "  static void register(final java.util.function.Consumer<CurrencyProvider> registry) {\n" +
                 "    // $=en-AU\n" +
-                "    Currency.register(\"AUD\",\n" +
+                "    registry.accept(new CurrencyProvider(\"AUD\",\n" +
                 "      2, // defaultFractionDigits\n" +
                 "      36, // numericCode\n" +
                 "      \"$\", // defaultSymbol\n" +
                 "      \"en-AU\", // locales\n" +
                 "      \"$,en-AU\" // symbolToLocales\n" +
-                "    );\n" +
+                "    ));\n" +
                 "  }";
         assertEquals(expected, CurrencyProviderTool.generateMethod(Sets.of("EN-AU")));
     }
