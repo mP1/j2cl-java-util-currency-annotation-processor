@@ -17,6 +17,7 @@
 
 package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
+import walkingkooka.collect.set.Sets;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessor;
 
 import java.util.Set;
@@ -26,7 +27,8 @@ public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnota
     @Override
     protected String generateTemplateMergeReplacement(final Set<String> languageTags,
                                                       final String filter) {
-        return CurrencyProviderTool.generateMethod(languageTags);
+        return CurrencyProviderTool.generateMethod(languageTags,
+            Sets.of("XXX")); // https://github.com/mP1/j2cl-java-util-currency-annotation-processor/issues/13
     }
 
     @Override

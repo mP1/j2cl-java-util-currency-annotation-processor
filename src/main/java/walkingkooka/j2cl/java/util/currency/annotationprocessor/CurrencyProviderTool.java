@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A simple tool that generates each and every currency known to the system.
@@ -42,14 +41,14 @@ public final class CurrencyProviderTool {
 
     public static void main(final String[] args) {
         final IndentingPrinter printer = Printers.sysOut().indenting(Indentation.with("  "));
-        new CurrencyProviderTool(printer).print(WalkingkookaLanguageTag.all("*"));
+        new CurrencyProviderTool(printer).print(WalkingkookaLanguageTag.all("*"), Sets.of("".split(",")));
         printer.flush();
     }
 
-    static String generateMethod(final Set<String> languageTags) {
+    static String generateMethod(final Set<String> languageTags, final Set<String> currencyCodes) {
         final StringBuilder output = new StringBuilder();
         try (final Printer printer = Printers.stringBuilder(output, LineEnding.SYSTEM)) {
-            new CurrencyProviderTool(printer.indenting(Indentation.with("  "))).print(languageTags);
+            new CurrencyProviderTool(printer.indenting(Indentation.with("  "))).print(languageTags, currencyCodes);
         }
 
         return output.toString();
@@ -60,24 +59,28 @@ public final class CurrencyProviderTool {
         this.printer = printer;
     }
 
-    private void print(final Set<String> languageTags) {
+    private void print(final Set<String> languageTags, final Set<String> currencyCodes) {
         this.print0(languageTags.stream()
-                .map(Locale::forLanguageTag)
-                .collect(Collectors.toCollection(Sets::ordered))
+                        .map(Locale::forLanguageTag)
+                        .collect(Collectors.toCollection(Sets::ordered)),
+                currencyCodes
         );
     }
 
-    private void print0(final Set<Locale> locales) {
+    private void print0(final Set<Locale> locales, final Set<String> currencyCodes) {
+        this.print("// locales: " + locales.stream().map(Locale::toLanguageTag).collect(Collectors.joining(", ")));
+        this.print("// currency codes: " + currencyCodes.stream().collect(Collectors.joining(", ")));
+
         this.indent();
         {
             this.print("static void register(final java.util.function.Consumer<CurrencyProvider> registry) {");
             this.indent();
             {
-                locales.stream()
-                        .flatMap(this::getCurrencyIfSupported)
-                        .sorted(CurrencyProviderTool::compare)
-                        .distinct()
-                        .forEach(c -> this.printCurrency(c, locales));
+                final Set<Currency> ignore = Sets.ordered();
+                this.printCurrenciesWithLocales(locales, ignore);
+                this.printCurrencyWithoutLocales(currencyCodes, locales, ignore);
+
+                this.print(); // emptyLine
             }
             this.outdent();
             this.print("}");
@@ -85,67 +88,55 @@ public final class CurrencyProviderTool {
         this.outdent();
     }
 
-    private Stream<Currency> getCurrencyIfSupported(final Locale locale) {
-        Stream<Currency> currency;
-        try{
-            currency= Stream.of(Currency.getInstance(locale));
-        } catch (final Exception unsupported) {
-            currency = Stream.empty();
+    private void printCurrenciesWithLocales(final Set<Locale> locales, final Set<Currency> ignore) {
+        final Map<Currency, Set<Locale>> currencyToLocales = Maps.sorted(CurrencyProviderTool::compareCurrencyCodes);
+
+        for (final Locale locale : locales) {
+            try {
+                final Currency currency = Currency.getInstance(locale);
+                Set<Locale> localesForCurrency = currencyToLocales.get(currency);
+                if (null == localesForCurrency) {
+                    localesForCurrency = Sets.ordered();
+                    currencyToLocales.put(currency, localesForCurrency);
+                }
+                localesForCurrency.add(locale);
+            } catch (final Exception unsupported) {
+                // locale hasnt have a currency skip it.
+            }
         }
-        return currency;
+
+        currencyToLocales.forEach((c, l) -> this.printCurrenciesWithLocales(c, locales));
+        ignore.addAll(currencyToLocales.keySet());
     }
 
-    private static int compare(final Currency left, final Currency right) {
-        return left.getCurrencyCode().compareToIgnoreCase(right.getCurrencyCode());
+    /**
+     * Comparator used to sort by {@link Currency#getCurrencyCode()}
+     */
+    private static int compareCurrencyCodes(final Currency left, final Currency right) {
+        return left.getCurrencyCode().compareTo(right.getCurrencyCode());
     }
 
-    private void printCurrency(final Currency currency,
-                               final Set<Locale> filteredLocales) {
-        final java.util.Currency currencyJre = java.util.Currency.getInstance(currency.getCurrencyCode());
-
-        final Map<String, Set<Locale>> symbolToLocales = Maps.sorted();
-
-        // gather all symbol to locales
-        for (final Locale locale : filteredLocales) {
-            final String symbol = currencyJre.getSymbol(locale);
-            if (symbol.isEmpty()) {
-                continue;
-            }
-
-            Set<Locale> locales = symbolToLocales.get(symbol);
-            if (null == locales) {
-                locales = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
-                symbolToLocales.put(symbol, locales);
-            }
-            locales.add(locale);
-        }
+    private void printCurrenciesWithLocales(final Currency currency,
+                                            final Set<Locale> filteredLocales) {
+        final Map<String, Set<Locale>> symbolToLocales = symbolToLocales(currency, filteredLocales);
 
         this.print();
         symbolToLocales.forEach((k, v) -> this.print("// " + k + "=" + v.stream().map(Locale::toLanguageTag).collect(Collectors.joining(", "))));
 
-        String most = null;
-        int mostCount = 0;
-        for (final Entry<String, Set<Locale>> symbolAndLocales : symbolToLocales.entrySet()) {
-            final int count = symbolAndLocales.getValue().size();
-            if (count > mostCount) {
-                mostCount = count;
-                most = symbolAndLocales.getKey();
-            }
-        }
-
-        //symbolToLocales.remove(most);
-        this.print("registry.accept(new CurrencyProvider(" + quote(currency.getCurrencyCode()) + ",");
+        this.print("registry.accept(new CurrencyProvider(" + quote(currency.getCurrencyCode()) + ", // currencyCode");
         this.indent();
         {
             this.print(currency.getDefaultFractionDigits() + ", // defaultFractionDigits");
             this.print(currency.getNumericCode() + ", // numericCode");
-            this.print(quote(most) + (symbolToLocales.size() >= 1 ? "," : "") + " // defaultSymbol"); // defaultSymbol
+
+            final String defaultSymbol = defaultSymbol(currency);
+            this.print(quote(defaultSymbol) + (symbolToLocales.size() >= 1 ? "," : "") + " // defaultSymbol"); // defaultSymbol
 
             final Set<Locale> locales = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
 
             for (final Locale possible : filteredLocales) {
                 try {
-                    final java.util.Currency possibleCurrency = java.util.Currency.getInstance(possible);
+                    final Currency possibleCurrency = Currency.getInstance(possible);
                     if (currency.getCurrencyCode().equals(possibleCurrency.getCurrencyCode())) {
                         locales.add(possible);
                     }
@@ -154,27 +145,109 @@ public final class CurrencyProviderTool {
                 }
             }
 
+            symbolToLocales.remove(defaultSymbol);
+
             this.print(quote(locales.stream()
                     .map(Locale::toLanguageTag)
-                    .collect(Collectors.joining(","))) + ", // locales");
+                    .collect(Collectors.joining(","))) + (symbolToLocales.isEmpty() ? "" : ",") + " // locales");
 
-            int i = 0;
-            for (final Entry<String, Set<Locale>> symbolAndLocales : symbolToLocales.entrySet()) {
-                final String separator = (i < symbolToLocales.size() - 1) ?
-                        "," :
-                        "";
-                this.print(quote(symbolAndLocales.getValue()
-                        .stream()
-                        .map(Locale::toLanguageTag)
-                        .collect(Collectors.joining(",", symbolAndLocales.getKey() + ",", ""))) + separator + " // symbolToLocales");
+            this.printSymbolsToLocales(symbolToLocales);
+        }
+        this.outdent();
+        this.print("));");
+    }
 
-                i++;
+    /**
+     * Finds the default symbol for a {@link Currency} which seems to be the most popular symbol for all JRE locales.
+     */
+    private String defaultSymbol(final Currency currency) {
+        String most = null;
+        int mostCount = -1;
+
+        for (final Entry<String, Set<Locale>> symbolAndLocales : symbolToLocales(currency, WalkingkookaLanguageTag.locales()).entrySet()) {
+            final int count = symbolAndLocales.getValue().size();
+            if (count > mostCount) {
+                mostCount = count;
+                most = symbolAndLocales.getKey();
             }
+        }
+
+        return most;
+    }
+
+    private void printCurrencyWithoutLocales(final Set<String> currencyCodes,
+                                             final Set<Locale> locales,
+                                             final Set<Currency> ignore) {
+        for (final String currencyCode : currencyCodes) {
+            try {
+                final Currency currency = Currency.getInstance(currencyCode);
+
+                // dont output $currency if it has already been consumed
+                if (ignore.add(currency)) {
+                    printCurrencyWithoutLocales0(currency, locales);
+                }
+            } catch (final Exception unsupported) {
+            }
+        }
+    }
+
+    private void printCurrencyWithoutLocales0(final Currency currency, final Set<Locale> locales) {
+        final String currencyCode = currency.getCurrencyCode();
+
+        this.print();
+        this.print("// " + CharSequences.quoteAndEscape(currencyCode));
+
+        this.print("registry.accept(new CurrencyProvider(" + quote(currencyCode) + ", // currencyCode");
+        this.indent();
+        {
+            this.print(currency.getDefaultFractionDigits() + ", // defaultFractionDigits");
+            this.print(currency.getNumericCode() + ", // numericCode");
+            this.print(quote(currencyCode) + ", // defaultSymbol"); // defaultSymbol
+
+            final Map<String, Set<Locale>> symbolToLocales = symbolToLocales(currency, locales);
+            symbolToLocales.remove(currencyCode);
+
+            this.print(quote("") + (symbolToLocales.isEmpty() ? "": ",") + " // locales");
+            this.printSymbolsToLocales(symbolToLocales);
         }
         this.outdent();
         this.print("));");
 
         this.print();
+    }
+
+    private void printSymbolsToLocales(final Map<String, Set<Locale>> symbolToLocales) {
+        int i = 0;
+        for (final Entry<String, Set<Locale>> symbolAndLocales : symbolToLocales.entrySet()) {
+            final String separator = (i < symbolToLocales.size() - 1) ?
+                    "," :
+                    "";
+            this.print(quote(symbolAndLocales.getValue()
+                    .stream()
+                    .map(Locale::toLanguageTag)
+                    .collect(Collectors.joining(",", symbolAndLocales.getKey() + ",", ""))) + separator + " // symbolToLocales");
+            i++;
+        }
+    }
+
+    /**
+     * Builds an mapping of symbol to the locales for this currency
+     */
+    private static Map<String, Set<Locale>> symbolToLocales(final Currency currency, final Set<Locale> locales) {
+        final Map<String, Set<Locale>> symbolToLocales = Maps.sorted();
+
+        // gather all symbol to locales
+        for (final Locale locale : locales) {
+            final String symbol = currency.getSymbol(locale);
+            Set<Locale> localesForSymbol = symbolToLocales.get(symbol);
+            if (null == localesForSymbol) {
+                localesForSymbol = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
+                symbolToLocales.put(symbol, localesForSymbol);
+            }
+            localesForSymbol.add(locale);
+        }
+
+        return symbolToLocales;
     }
 
     private static int compareLocaleLanguageTag(final Locale left, final Locale right) {
