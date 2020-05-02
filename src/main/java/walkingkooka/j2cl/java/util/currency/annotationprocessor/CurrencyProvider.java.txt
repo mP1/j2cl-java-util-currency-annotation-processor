@@ -21,4 +21,28 @@ public final class CurrencyProvider {
 
 $ALL
 
+    /**
+     * A record that holds currency data.
+     */
+    private CurrencyProvider(final String currencyCode,
+                             final int defaultFractionDigits,
+                             final int numericCode,
+                             final String defaultSymbol,
+                             final String locales,
+                             final String... symbolToLocales) {
+        super();
+        this.currencyCode = currencyCode;
+        this.defaultFractionDigits = defaultFractionDigits;
+        this.numericCode = numericCode;
+        this.defaultSymbol = defaultSymbol;
+        this.locales = locales;
+        this.symbolToLocales = symbolToLocales;
+    }
+
+    final String currencyCode;
+    final int defaultFractionDigits;
+    final int numericCode;
+    final String defaultSymbol;
+    final String locales;
+    final String[] symbolToLocales;
 }

@@ -70,7 +70,7 @@ public final class CurrencyProviderTool {
     private void print0(final Set<Locale> locales) {
         this.indent();
         {
-            this.print("static void register() {");
+            this.print("static void register(final java.util.function.Consumer<CurrencyProvider> registry) {");
             this.indent();
             {
                 locales.stream()
@@ -134,7 +134,7 @@ public final class CurrencyProviderTool {
         }
 
         //symbolToLocales.remove(most);
-        this.print(Currency.class.getSimpleName() + ".register(" + quote(currency.getCurrencyCode()) + ",");
+        this.print("registry.accept(new CurrencyProvider(" + quote(currency.getCurrencyCode()) + ",");
         this.indent();
         {
             this.print(currency.getDefaultFractionDigits() + ", // defaultFractionDigits");
@@ -172,7 +172,7 @@ public final class CurrencyProviderTool {
             }
         }
         this.outdent();
-        this.print(");");
+        this.print("));");
 
         this.print();
     }
