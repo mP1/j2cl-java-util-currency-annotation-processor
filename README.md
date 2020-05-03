@@ -8,7 +8,9 @@
 
 # j2cl java-util-currency-annotation-processor
 
-An annotation processor that generates the `CurrencyProvider` used by the emulated `java.util.Currency` in [j2cl-java-util-Currency](https://travis-ci.com/mP1/j2cl-java-util-Currency)]
+An annotation processor that generates the `CurrencyProvider` used by the emulated `java.util.Currency` in 
+[j2cl-java-util-Currency](https://travis-ci.com/mP1/j2cl-java-util-Currency), to support most `Currency` features in javascript
+after building with [j2cl-maven-plugin](https://travis-ci.com/mP1/j2cl-maven-plugin).
 
 To select which locales are included set the `walkingkooka.j2cl.java.util.Locale` annotation processor argument.
 
@@ -19,6 +21,12 @@ To select which locales are included set the `walkingkooka.j2cl.java.util.Locale
 This selects all locales starting with `EN`.
 
 For more details [click here](https://github.com/mP1/j2cl-locale)
+
+
+
+## Unsupported features.
+
+See [j2cl-java-util-Currency](https://travis-ci.com/mP1/j2cl-java-util-Currency) for a more comprehensive summary.
 
 
 
