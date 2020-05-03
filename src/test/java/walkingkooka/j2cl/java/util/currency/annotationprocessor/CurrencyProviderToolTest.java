@@ -18,12 +18,23 @@
 package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
 import org.junit.jupiter.api.Test;
+import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.set.Sets;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
+import walkingkooka.text.CaseSensitivity;
+import walkingkooka.text.LineEnding;
+
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProviderTool> {
 
@@ -143,6 +154,91 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         assertEquals(expected, CurrencyProviderTool.generateMethod(Sets.of("EN-NZ"), Sets.of("NZD")));
     }
 
+    @Test
+    public void testGeneratedCodeWithoutXXX() {
+        final String generated = CurrencyProviderTool.generateMethod(WalkingkookaLanguageTag.all(), Sets.empty());
+
+        assertEquals(false,
+                CaseSensitivity.INSENSITIVE.contains(removeHeaderComments(generated), "XXX"),
+                () -> "generated code should not contain currency code \"XXX\"\n" + generated);
+    }
+
+    @Test
+    public void testGeneratedCodeWithoutYYY() {
+        final String generated = CurrencyProviderTool.generateMethod(WalkingkookaLanguageTag.all(), Sets.empty());
+
+        assertEquals(false,
+                CaseSensitivity.INSENSITIVE.contains(removeHeaderComments(generated), "YYY"),
+                () -> "generated code should not contain currency code \"YYY\"\n" + generated);
+    }
+
+    @Test
+    public void testGeneratedCodeIncludesAllCurrenciesWithLocalesCurrencyCode() {
+        final String generated = CurrencyProviderTool.generateMethod(WalkingkookaLanguageTag.all(), Sets.empty());
+        final String generated2 = removeHeaderComments(generated);
+
+        final Set<String> currencyCodeWithLocales = Currency.getAvailableCurrencies()
+                .stream()
+                .filter(c -> {
+                    boolean keep = false;
+
+                    for (final Locale locale : Locale.getAvailableLocales()) {
+                        try {
+                            keep = c.equals(Currency.getInstance(locale));
+                            if (keep) {
+                                break;
+                            }
+                        } catch (final Exception e) {
+                        }
+                    }
+                    return keep;
+                })
+                .map(Currency::getCurrencyCode)
+                .collect(Collectors.toCollection(Sets::sorted));
+
+        assertEquals(true,
+                currencyCodeWithLocales.size() > 25,
+                () -> "There should be at least 25 currencies with locales " + currencyCodeWithLocales);
+        assertNotEquals(Sets.empty(),
+                currencyCodeWithLocales,
+                "Should have found many currencies with locales");
+
+        final List<String> missing = currencyCodeWithLocales.stream()
+                .filter(cc -> false == CaseSensitivity.INSENSITIVE.contains(generated2, cc))
+                .collect(Collectors.toList());
+
+        assertEquals(Lists.empty(),
+                missing,
+                () -> "generated code missing the following locales with currency\n" + generated);
+    }
+
+    private String removeHeaderComments(final String generated) {
+        // The first two lines which hold locales and currency code lists
+        final String generated1 = generated.substring(generated.indexOf(LineEnding.SYSTEM.toString()) + 1);
+        return generated.substring(generated1.indexOf(LineEnding.SYSTEM.toString()) + 1);
+    }
+
+    @Test
+    public void testGeneratedCodeIncludesLocalesLanguageTagLiterals() {
+        final String generated = CurrencyProviderTool.generateMethod(WalkingkookaLanguageTag.all(), Sets.empty());
+
+        final List<String> with = Arrays.stream(Locale.getAvailableLocales())
+                .filter(l -> {
+                    boolean keep = false;
+
+                    try {
+                        Currency.getInstance(l);
+                        keep = true;
+                    } catch (final Exception e) {
+                    }
+                    return keep;
+                })
+                .map(Locale::toLanguageTag)
+                .collect(Collectors.toList());
+        assertNotEquals(Lists.empty(),
+                with,
+                () -> "All locales should have appeared in generated code\n" + generated);
+    }
 
     // ClassTesting.....................................................................................................
 
