@@ -33,7 +33,7 @@ public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnota
 
     @Override
     protected String placeholder() {
-        return "$ALL";
+        return "$REGISTER-METHOD";
     }
 
     @Override

@@ -19,7 +19,11 @@ package walkingkooka.j2cl.java.util.currency;
 
 public final class CurrencyProvider {
 
-$ALL
+  public final static String ANNOTATION_PROCESSOR_LOCALES_FILTER = $FILTERED_LOCALES;
+
+  public final static String SELECTED_LOCALES = $SELECTED_LOCALES;
+
+$REGISTER-METHOD
 
     /**
      * A record that holds currency data.
