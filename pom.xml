@@ -13,7 +13,6 @@
 
     <properties>
         <junit.version>4.12</junit.version>
-        <!-- Plugin dependencies versions-->
         <maven.enforcer.plugin.version>1.4.1</maven.enforcer.plugin.version>
         <maven.project.version>2.2.1</maven.project.version>
         <maven.required.version>3.0</maven.required.version>
@@ -21,10 +20,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
     </properties>
-
-    <prerequisites>
-        <maven>${maven.required.version}</maven>
-    </prerequisites>
 
     <licenses>
         <license>
