@@ -23,30 +23,7 @@ public final class CurrencyProvider {
 
   public final static String SELECTED_LOCALES = $SELECTED_LOCALES;
 
-$REGISTER-METHOD
+$DATA_COMMENT
 
-    /**
-     * A record that holds currency data.
-     */
-    private CurrencyProvider(final String currencyCode,
-                             final int defaultFractionDigits,
-                             final int numericCode,
-                             final String defaultSymbol,
-                             final String locales,
-                             final String... symbolToLocales) {
-        super();
-        this.currencyCode = currencyCode;
-        this.defaultFractionDigits = defaultFractionDigits;
-        this.numericCode = numericCode;
-        this.defaultSymbol = defaultSymbol;
-        this.locales = locales;
-        this.symbolToLocales = symbolToLocales;
-    }
-
-    final String currencyCode;
-    final int defaultFractionDigits;
-    final int numericCode;
-    final String defaultSymbol;
-    final String locales;
-    final String[] symbolToLocales;
+  public final static String DATA = $DATA;
 }

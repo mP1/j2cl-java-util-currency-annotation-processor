@@ -19,21 +19,21 @@ package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
 import walkingkooka.collect.set.Sets;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessor;
+import walkingkooka.text.printer.IndentingPrinter;
 
+import java.io.DataOutput;
 import java.util.Set;
 
 public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnotationProcessor {
 
-    @Override
-    protected String generateTemplateMergeReplacement(final Set<String> languageTags,
-                                                      final String filter) {
-        return CurrencyProviderTool.generateMethod(languageTags,
-            Sets.of("XXX")); // https://github.com/mP1/j2cl-java-util-currency-annotation-processor/issues/13
-    }
-
-    @Override
-    protected String placeholder() {
-        return "$REGISTER-METHOD";
+    protected void generate(final Set<String> languageTags,
+                            final String filter,
+                            final DataOutput data,
+                            final IndentingPrinter comments) throws Exception {
+        CurrencyProviderTool.generate(languageTags,
+                Sets.of("XXX"),
+                data,
+                comments); // https://github.com/mP1/j2cl-java-util-currency-annotation-processor/issues/13
     }
 
     @Override
