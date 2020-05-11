@@ -18,19 +18,28 @@
 package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
 import walkingkooka.collect.set.Sets;
+import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessor;
 import walkingkooka.text.printer.IndentingPrinter;
 
 import java.io.DataOutput;
+import java.util.Currency;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnotationProcessor {
 
     @Override
     protected Set<String> additionalArguments() {
-        return Sets.empty();
+        return Sets.of(CURRENCY_CODES_ANNOTATION_PROCESSOR_OPTION);
     }
+
+    /**
+     * The annotation processor option that has the csv list of currency code selectors.
+     */
+    private final static String CURRENCY_CODES_ANNOTATION_PROCESSOR_OPTION = "walkingkooka.j2cl.java.util.Currency";
 
     @Override
     protected void generate(final Set<String> languageTags,
@@ -41,6 +50,16 @@ public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnota
                 Sets.of("XXX"),
                 data,
                 comments); // https://github.com/mP1/j2cl-java-util-currency-annotation-processor/issues/13
+    }
+
+    static Set<String> currencyCodes(final String filter) {
+        final Predicate<String> predicate = WalkingkookaLanguageTag.filter(filter);
+
+        return Currency.getAvailableCurrencies()
+                .stream()
+                .map(Currency::getCurrencyCode)
+                .filter(predicate)
+                .collect(Collectors.toCollection(Sets::sorted));
     }
 
     @Override

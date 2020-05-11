@@ -12,13 +12,16 @@ An annotation processor that generates the `CurrencyProvider` used by the emulat
 [j2cl-java-util-Currency](https://travis-ci.com/mP1/j2cl-java-util-Currency), to support most `Currency` features in javascript
 after building with [j2cl-maven-plugin](https://travis-ci.com/mP1/j2cl-maven-plugin).
 
-To select which locales are included set the `walkingkooka.j2cl.java.util.Locale` annotation processor argument.
 
-```xml
+- Selects currencies for the given [locales](https://travis-ci.com/mP1/j2cl).
+- `walkingkooka.j2cl.java.util.Currency` csv of currency codes, with trailing wildcard support. 
+
+```text
+-Awalkingkooka.j2cl.java.util.Currency=XXX
 -Awalkingkooka.j2cl.java.util.Locale=EN*
 ```
 
-This selects all locales starting with `EN`.
+- This selects all currency data for locales starting with `EN`, and the currency with currency code=`XXX`.
 
 For more details [click here](https://github.com/mP1/j2cl-locale)
 
