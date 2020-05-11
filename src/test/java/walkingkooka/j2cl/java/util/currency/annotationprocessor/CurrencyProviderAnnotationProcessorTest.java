@@ -18,12 +18,62 @@
 package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
 import org.junit.jupiter.api.Test;
+import walkingkooka.collect.set.Sets;
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
+import walkingkooka.text.CharSequences;
+
+import java.util.Currency;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class CurrencyProviderAnnotationProcessorTest implements ClassTesting<CurrencyProviderAnnotationProcessor> {
+
+    @Test
+    public void testCurrencyCodesXXX() {
+        this.currencyCodesAndCheck("XXX", "XXX");
+    }
+
+    @Test
+    public void testCurrencyCodesAUD() {
+        this.currencyCodesAndCheck("AUD", "AUD");
+    }
+
+    @Test
+    public void testCurrencyCodesNZD() {
+        this.currencyCodesAndCheck("NZD", "NZD");
+    }
+
+    @Test
+    public void testCurrencyCodesAUD_NZD() {
+        this.currencyCodesAndCheck("AUD,NZD", "AUD", "NZD");
+    }
+
+    @Test
+    public void testCurrencyCodesNZD_AUD_() {
+        this.currencyCodesAndCheck("NZD,AUD", "AUD", "NZD");
+    }
+
+    @Test
+    public void testCurrencyCodesWildcard() {
+        this.currencyCodesAndCheck("*",
+                Currency.getAvailableCurrencies()
+                        .stream()
+                        .map(Currency::getCurrencyCode)
+                        .collect(Collectors.toCollection(Sets::sorted)));
+    }
+
+    private void currencyCodesAndCheck(final String filter, final String... currencyCodes) {
+        this.currencyCodesAndCheck(filter, Sets.of(currencyCodes));
+    }
+
+    private void currencyCodesAndCheck(final String filter, final Set<String> currencyCodes) {
+        assertEquals(currencyCodes,
+                CurrencyProviderAnnotationProcessor.currencyCodes(filter),
+                () -> "filter " + CharSequences.quoteAndEscape(filter));
+    }
 
     @Test
     public void testDefaultPublicConstructor() throws Exception {
