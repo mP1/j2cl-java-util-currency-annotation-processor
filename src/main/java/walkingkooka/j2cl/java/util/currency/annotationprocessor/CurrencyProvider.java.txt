@@ -19,11 +19,15 @@ package walkingkooka.j2cl.java.util.currency;
 
 public final class CurrencyProvider {
 
-  public final static String ANNOTATION_PROCESSOR_LOCALES_FILTER = $FILTERED_LOCALES;
+  public final static String ANNOTATION_PROCESSOR_LOCALES_FILTER = preventInlining($FILTERED_LOCALES);
 
-  public final static String SELECTED_LOCALES = $SELECTED_LOCALES;
+  public final static String SELECTED_LOCALES = preventInlining($SELECTED_LOCALES);
 
 $DATA_COMMENT
 
-  public final static String DATA = $DATA;
+  public final static String DATA = preventInlining($DATA);
+
+  private static String preventInlining(final String string){
+    return string;
+  }
 }
