@@ -22,6 +22,7 @@ import walkingkooka.collect.set.Sets;
 import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessor;
+import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessorTool;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.printer.IndentingPrinter;
 import walkingkooka.text.printer.Printer;
@@ -34,6 +35,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -151,7 +153,7 @@ public final class CurrencyProviderTool {
                 data,
                 comments);
 
-        final Set<Locale> locales = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
+        final Set<Locale> locales = Sets.sorted(LocaleAwareAnnotationProcessorTool.LOCALE_COMPARATOR);
 
         for (final Locale possible : filteredLocales) {
             try {
@@ -230,6 +232,15 @@ public final class CurrencyProviderTool {
         comments.print(comments.lineEnding());
     }
 
+    private static Map<String, Set<Locale>> buildSymbolToLocales(final Currency currency,
+                                                                 final Set<Locale> locales) {
+        return LocaleAwareAnnotationProcessorTool.buildMultiLocaleMap(localeToSymbol(currency), locales);
+    }
+
+    private static Function<Locale, String> localeToSymbol(final Currency currency) {
+        return l -> currency.getSymbol(l);
+    }
+
     private static void generateCurrencyAttributes(final Currency currency,
                                                    final String defaultSymbol,
                                                    final DataOutput data,
@@ -292,30 +303,6 @@ public final class CurrencyProviderTool {
                 data.writeUTF(locale.toLanguageTag());
             }
         }
-    }
-
-    /**
-     * Builds an mapping of symbol to the locales for this currency
-     */
-    private static Map<String, Set<Locale>> buildSymbolToLocales(final Currency currency, final Set<Locale> locales) {
-        final Map<String, Set<Locale>> symbolToLocales = Maps.sorted();
-
-        // gather all symbol to locales
-        for (final Locale locale : locales) {
-            final String symbol = currency.getSymbol(locale);
-            Set<Locale> localesForSymbol = symbolToLocales.get(symbol);
-            if (null == localesForSymbol) {
-                localesForSymbol = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
-                symbolToLocales.put(symbol, localesForSymbol);
-            }
-            localesForSymbol.add(locale);
-        }
-
-        return symbolToLocales;
-    }
-
-    private static int compareLocaleLanguageTag(final Locale left, final Locale right) {
-        return left.toLanguageTag().compareTo(right.toLanguageTag());
     }
 
     /**
