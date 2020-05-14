@@ -157,7 +157,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                         "// numericCode=978\n" +
                         "// defaultSymbol=€\n" +
                         "// locales=de-AT,de-BE,de-DE,de-LU\n" +
-                        "// EUR=de-CH,de-LI\n" +
+                        "// EUR=de-CH, de-LI\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
