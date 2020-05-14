@@ -290,18 +290,12 @@ public final class CurrencyProviderTool {
 
         for (final Entry<String, Set<Locale>> symbolAndLocales : symbolToLocales.entrySet()) {
             final String symbol = symbolAndLocales.getKey();
-            final Set<Locale> locales = symbolAndLocales.getValue();
-
-            comments.lineStart();
-            comments.print(symbol + "=" + locales.stream()
-                    .map(Locale::toLanguageTag)
-                    .collect(Collectors.joining(",")));
             data.writeUTF(symbol);
 
-            data.writeInt(locales.size());
-            for (final Locale locale : locales) {
-                data.writeUTF(locale.toLanguageTag());
-            }
+            LocaleAwareAnnotationProcessorTool.generateLocales(symbolAndLocales.getValue(),
+                    data,
+                    symbol,
+                    comments);
         }
     }
 
