@@ -278,7 +278,7 @@ public final class CurrencyProviderTool {
             final String symbol = symbolAndLocales.getKey();
             data.writeUTF(symbol);
 
-            LocaleAwareAnnotationProcessorTool.generateLocales(symbolAndLocales.getValue(),
+            LocaleSupport.generateLocales(symbolAndLocales.getValue(),
                     data,
                     symbol,
                     comments);
