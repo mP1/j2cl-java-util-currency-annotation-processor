@@ -20,6 +20,7 @@ package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;
 import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
+import walkingkooka.j2cl.java.util.locale.support.LocaleSupport;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessor;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessorTool;
@@ -166,7 +167,7 @@ public final class CurrencyProviderTool {
             }
         }
 
-        generateCurrencyLocales(locales, data, comments);
+        LocaleSupport.generateLocales(locales, data, comments);
 
         final Map<String, Set<Locale>> symbolToLocales = buildSymbolToLocales(currency, filteredLocales);
         symbolToLocales.remove(defaultSymbol);
@@ -222,7 +223,7 @@ public final class CurrencyProviderTool {
                 data,
                 comments);
 
-        generateCurrencyLocales(Sets.empty(), data, comments);
+        LocaleSupport.generateLocales(Sets.empty(), data, comments);
 
         final Map<String, Set<Locale>> symbolToLocales = buildSymbolToLocales(currency, locales);
         symbolToLocales.remove(currencyCode);
@@ -263,21 +264,6 @@ public final class CurrencyProviderTool {
         comments.lineStart();
         comments.print("defaultSymbol=" + defaultSymbol);
         data.writeUTF(defaultSymbol);
-    }
-
-    private static void generateCurrencyLocales(final Set<Locale> locales,
-                                                final DataOutput data,
-                                                final IndentingPrinter comments) throws IOException {
-        comments.lineStart();
-        comments.print("locales=" + locales.stream()
-                .map(Locale::toLanguageTag)
-                .collect(Collectors.joining(",")));
-
-        data.writeInt(locales.size());
-
-        for (final Locale locale : locales) {
-            data.writeUTF(locale.toLanguageTag());
-        }
     }
 
     /**
