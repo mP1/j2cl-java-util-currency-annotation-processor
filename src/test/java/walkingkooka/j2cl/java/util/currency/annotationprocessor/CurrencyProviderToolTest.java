@@ -150,14 +150,14 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                         "// defaultFractionDigits=2\n" +
                         "// numericCode=756\n" +
                         "// defaultSymbol=CHF\n" +
-                        "// locales=de-CH,de-LI\n" +
+                        "// locales=de-CH, de-LI\n" +
                         "// \n" +
                         "// currencyCode=EUR\n" +
                         "// defaultFractionDigits=2\n" +
                         "// numericCode=978\n" +
                         "// defaultSymbol=€\n" +
-                        "// locales=de-AT,de-BE,de-DE,de-LU\n" +
-                        "// EUR=de-CH,de-LI\n" +
+                        "// locales=de-AT, de-BE, de-DE, de-LU\n" +
+                        "// EUR=de-CH, de-LI\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
