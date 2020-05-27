@@ -149,29 +149,35 @@ public final class CurrencyProviderTool {
                                                        final IndentingPrinter comments) throws IOException {
         final String defaultSymbol = defaultSymbol(currency);
 
-        generateCurrencyAttributes(currency,
-                defaultSymbol,
-                data,
-                comments);
+        generateCurrencyCode(currency, data, comments);
 
-        final Set<Locale> locales = Sets.sorted(LocaleAwareAnnotationProcessorTool.LOCALE_COMPARATOR);
+        comments.indent();
+        {
+            generateCurrencyAttributes(currency,
+                    defaultSymbol,
+                    data,
+                    comments);
 
-        for (final Locale possible : filteredLocales) {
-            try {
-                final Currency possibleCurrency = Currency.getInstance(possible);
-                if (currency.getCurrencyCode().equals(possibleCurrency.getCurrencyCode())) {
-                    locales.add(possible);
+            final Set<Locale> locales = Sets.sorted(LocaleAwareAnnotationProcessorTool.LOCALE_COMPARATOR);
+
+            for (final Locale possible : filteredLocales) {
+                try {
+                    final Currency possibleCurrency = Currency.getInstance(possible);
+                    if (currency.getCurrencyCode().equals(possibleCurrency.getCurrencyCode())) {
+                        locales.add(possible);
+                    }
+                } catch (final Exception ignore) {
+                    // ignore
                 }
-            } catch (final Exception ignore) {
-                // ignore
             }
+
+            LocaleSupport.generateLocales(locales, data, comments);
+
+            final Map<String, Set<Locale>> symbolToLocales = buildSymbolToLocales(currency, filteredLocales);
+            symbolToLocales.remove(defaultSymbol);
+            generateSymbolsToLocales(symbolToLocales, data, comments);
         }
-
-        LocaleSupport.generateLocales(locales, data, comments);
-
-        final Map<String, Set<Locale>> symbolToLocales = buildSymbolToLocales(currency, filteredLocales);
-        symbolToLocales.remove(defaultSymbol);
-        generateSymbolsToLocales(symbolToLocales, data, comments);
+        comments.outdent();
 
         comments.lineStart();
         comments.print(comments.lineEnding());
@@ -218,17 +224,24 @@ public final class CurrencyProviderTool {
                                                         final DataOutput data,
                                                         final IndentingPrinter comments) throws IOException {
         final String currencyCode = currency.getCurrencyCode();
-        generateCurrencyAttributes(currency,
-                currencyCode,
+
+        generateCurrencyCode(currency,
                 data,
                 comments);
+        comments.indent();
+        {
+            generateCurrencyAttributes(currency,
+                    currencyCode,
+                    data,
+                    comments);
 
-        LocaleSupport.generateLocales(Sets.empty(), data, comments);
+            LocaleSupport.generateLocales(Sets.empty(), data, comments);
 
-        final Map<String, Set<Locale>> symbolToLocales = buildSymbolToLocales(currency, locales);
-        symbolToLocales.remove(currencyCode);
-        generateSymbolsToLocales(symbolToLocales, data, comments);
-
+            final Map<String, Set<Locale>> symbolToLocales = buildSymbolToLocales(currency, locales);
+            symbolToLocales.remove(currencyCode);
+            generateSymbolsToLocales(symbolToLocales, data, comments);
+        }
+        comments.outdent();
         comments.lineStart();
         comments.print(comments.lineEnding());
     }
@@ -242,15 +255,19 @@ public final class CurrencyProviderTool {
         return l -> currency.getSymbol(l);
     }
 
-    private static void generateCurrencyAttributes(final Currency currency,
-                                                   final String defaultSymbol,
-                                                   final DataOutput data,
-                                                   final IndentingPrinter comments) throws IOException {
+    private static void generateCurrencyCode(final Currency currency,
+                                             final DataOutput data,
+                                             final IndentingPrinter comments) throws IOException {
         final String currencyCode = currency.getCurrencyCode();
         comments.lineStart();
         comments.print("currencyCode=" + currencyCode);
         data.writeUTF(currencyCode);
+    }
 
+    private static void generateCurrencyAttributes(final Currency currency,
+                                                   final String defaultSymbol,
+                                                   final DataOutput data,
+                                                   final IndentingPrinter comments) throws IOException {
         final int defaultFractionDigits = currency.getDefaultFractionDigits();
         comments.lineStart();
         comments.print("defaultFractionDigits=" + defaultFractionDigits);

@@ -147,17 +147,17 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         this.generateAndCheck("DE*",
                 "",
                 "// currencyCode=CHF\n" +
-                        "// defaultFractionDigits=2\n" +
-                        "// numericCode=756\n" +
-                        "// defaultSymbol=CHF\n" +
-                        "// locales=de-CH, de-LI\n" +
+                        "//   defaultFractionDigits=2\n" +
+                        "//   numericCode=756\n" +
+                        "//   defaultSymbol=CHF\n" +
+                        "//   locales=de-CH, de-LI\n" +
                         "// \n" +
                         "// currencyCode=EUR\n" +
-                        "// defaultFractionDigits=2\n" +
-                        "// numericCode=978\n" +
-                        "// defaultSymbol=€\n" +
-                        "// locales=de-AT, de-BE, de-DE, de-LU\n" +
-                        "// EUR=de-CH, de-LI\n" +
+                        "//   defaultFractionDigits=2\n" +
+                        "//   numericCode=978\n" +
+                        "//   defaultSymbol=€\n" +
+                        "//   locales=de-AT, de-BE, de-DE, de-LU\n" +
+                        "//   EUR=de-CH, de-LI\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
@@ -169,11 +169,11 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         this.generateAndCheck("en-AU",
                 "",
                 "// currencyCode=AUD\n" +
-                        "// defaultFractionDigits=2\n" +
-                        "// numericCode=36\n" +
-                        "// defaultSymbol=A$\n" +
-                        "// locales=en-AU\n" +
-                        "// $=en-AU\n" +
+                        "//   defaultFractionDigits=2\n" +
+                        "//   numericCode=36\n" +
+                        "//   defaultSymbol=A$\n" +
+                        "//   locales=en-AU\n" +
+                        "//   $=en-AU\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
@@ -185,11 +185,11 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         this.generateAndCheck("en-NZ",
                 "",
                 "// currencyCode=NZD\n" +
-                        "// defaultFractionDigits=2\n" +
-                        "// numericCode=554\n" +
-                        "// defaultSymbol=NZ$\n" +
-                        "// locales=en-NZ\n" +
-                        "// $=en-NZ\n" +
+                        "//   defaultFractionDigits=2\n" +
+                        "//   numericCode=554\n" +
+                        "//   defaultSymbol=NZ$\n" +
+                        "//   locales=en-NZ\n" +
+                        "//   $=en-NZ\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
@@ -201,10 +201,10 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         this.generateAndCheck("",
                 "XXX",
                 "// currencyCode=XXX\n" +
-                        "// defaultFractionDigits=-1\n" +
-                        "// numericCode=999\n" +
-                        "// defaultSymbol=XXX\n" +
-                        "// locales=\n" +
+                        "//   defaultFractionDigits=-1\n" +
+                        "//   numericCode=999\n" +
+                        "//   defaultSymbol=XXX\n" +
+                        "//   locales=\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
@@ -216,17 +216,17 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         this.generateAndCheck("EN-NZ",
                 "XXX",
                 "// currencyCode=NZD\n" +
-                        "// defaultFractionDigits=2\n" +
-                        "// numericCode=554\n" +
-                        "// defaultSymbol=NZ$\n" +
-                        "// locales=en-NZ\n" +
-                        "// $=en-NZ\n" +
+                        "//   defaultFractionDigits=2\n" +
+                        "//   numericCode=554\n" +
+                        "//   defaultSymbol=NZ$\n" +
+                        "//   locales=en-NZ\n" +
+                        "//   $=en-NZ\n" +
                         "// \n" +
                         "// currencyCode=XXX\n" +
-                        "// defaultFractionDigits=-1\n" +
-                        "// numericCode=999\n" +
-                        "// defaultSymbol=XXX\n" +
-                        "// locales=\n" +
+                        "//   defaultFractionDigits=-1\n" +
+                        "//   numericCode=999\n" +
+                        "//   defaultSymbol=XXX\n" +
+                        "//   locales=\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
@@ -238,11 +238,11 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         this.generateAndCheck("EN-NZ",
                 "NZD",
                 "// currencyCode=NZD\n" +
-                        "// defaultFractionDigits=2\n" +
-                        "// numericCode=554\n" +
-                        "// defaultSymbol=NZ$\n" +
-                        "// locales=en-NZ\n" +
-                        "// $=en-NZ\n" +
+                        "//   defaultFractionDigits=2\n" +
+                        "//   numericCode=554\n" +
+                        "//   defaultSymbol=NZ$\n" +
+                        "//   locales=en-NZ\n" +
+                        "//   $=en-NZ\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
