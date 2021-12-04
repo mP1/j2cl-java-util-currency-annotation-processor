@@ -42,8 +42,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -86,8 +84,9 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                 })
                 .distinct()
                 .count();
-        assertEquals(currencyCount,
-                count,
+        this.checkEquals(
+                currencyCount,
+                (long) count, // currencyCount is a long
                 () -> "locale record count " + dataOutput);
 
         for (int i = 0; i < count; i++) {
@@ -97,14 +96,14 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
             final String defaultSymbol = data.readUTF();
 
             final int ii = i;
-            assertNotEquals("", currencyCode, () -> "currencyCode for " + ii);
+            this.checkNotEquals("", currencyCode, () -> "currencyCode for " + ii);
             assertTrue(defaultFractionDigits >= 0, () -> "defaultFractionDigits for " + ii + " currencyCode: " + currencyCode);
-            assertNotEquals(0, numericCode, () -> "numericCode for " + ii + " currencyCode: " + currencyCode);
-            assertNotEquals("", defaultSymbol, () -> "defaultSymbol for " + ii+ " currencyCode: " + currencyCode);
+            this.checkNotEquals(0, numericCode, () -> "numericCode for " + ii + " currencyCode: " + currencyCode);
+            this.checkNotEquals("", defaultSymbol, () -> "defaultSymbol for " + ii + " currencyCode: " + currencyCode);
 
             final Currency currency = Currency.getInstance(currencyCode);
-            assertEquals(currency.getDefaultFractionDigits(), defaultFractionDigits, () -> "defaultFractionDigits for " + ii + " currencyCode: " + currencyCode);
-            assertEquals(currency.getNumericCode(), numericCode, () -> "numericCode for " + ii + " currencyCode: " + currencyCode);
+            this.checkEquals(currency.getDefaultFractionDigits(), defaultFractionDigits, () -> "defaultFractionDigits for " + ii + " currencyCode: " + currencyCode);
+            this.checkEquals(currency.getNumericCode(), numericCode, () -> "numericCode for " + ii + " currencyCode: " + currencyCode);
 
             readLocales(data);
             readSymbolToLocales(data);
@@ -113,19 +112,19 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         assertThrows(EOFException.class, () -> data.readBoolean(), "DataInput be empty should throw EOF");
     }
 
-    private static void readLocales(final DataInput data) throws IOException {
+    private void readLocales(final DataInput data) throws IOException {
         final int count = data.readInt();
         for (int i = 0; i < count; i++) {
             checkLocale(data.readUTF());
         }
     }
 
-    private static void readSymbolToLocales(final DataInput data) throws IOException {
+    private void readSymbolToLocales(final DataInput data) throws IOException {
         final int symbolToLocaleCount = data.readInt();
 
         for (int i = 0; i < symbolToLocaleCount; i++) {
             final String symbol = data.readUTF();
-            assertNotEquals("", symbol, "symbol");
+            this.checkNotEquals("", symbol, "symbol");
 
             final int localeCount = data.readInt();
             assertTrue(localeCount >= 0, "localeCount must be >= 0 was " + localeCount);
@@ -136,10 +135,12 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         }
     }
 
-    private static void checkLocale(final String locale) {
-        assertEquals(locale,
+    private void checkLocale(final String locale) {
+        this.checkEquals(
+                locale,
                 Locale.forLanguageTag(locale).toLanguageTag(),
-                "locale languageTag must match");
+                "locale languageTag must match"
+        );
     }
 
     @Test
@@ -252,7 +253,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
     private void generateAndCheck(final String filter,
                                   final String currencyCode,
                                   final String expected) throws Exception {
-        assertEquals(expected,
+        this.checkEquals(expected,
                 generate(filter, currencyCode),
                 () -> "filter=" + CharSequences.quoteAndEscape(filter) + " currencyCode=" + CharSequences.quoteAndEscape(currencyCode));
     }
@@ -261,7 +262,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
     public void testGeneratedCodeWithoutXXX() throws Exception {
         final String generated = generate("*", "");
 
-        assertEquals(false,
+        this.checkEquals(false,
                 CaseSensitivity.INSENSITIVE.contains(generated, "XXX"),
                 () -> "generated code should not contain currency code \"XXX\"\n" + generated);
     }
@@ -270,7 +271,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
     public void testGeneratedCodeWithoutYYY() throws Exception {
         final String generated = generate("*", "");
 
-        assertEquals(false,
+        this.checkEquals(false,
                 CaseSensitivity.INSENSITIVE.contains(generated, "YYY"),
                 () -> "generated code should not contain currency code \"YYY\"\n" + generated);
     }
@@ -298,10 +299,10 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                 .map(Currency::getCurrencyCode)
                 .collect(Collectors.toCollection(Sets::sorted));
 
-        assertEquals(true,
+        this.checkEquals(true,
                 currencyCodeWithLocales.size() > 25,
                 () -> "There should be at least 25 currencies with locales " + currencyCodeWithLocales);
-        assertNotEquals(Sets.empty(),
+        this.checkNotEquals(Sets.empty(),
                 currencyCodeWithLocales,
                 "Should have found many currencies with locales");
 
@@ -309,7 +310,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                 .filter(cc -> false == CaseSensitivity.INSENSITIVE.contains(generated, cc))
                 .collect(Collectors.toList());
 
-        assertEquals(Lists.empty(),
+        this.checkEquals(Lists.empty(),
                 missing,
                 () -> "generated code missing the following locales with currency\n" + generated);
     }
@@ -331,7 +332,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                 })
                 .map(Locale::toLanguageTag)
                 .collect(Collectors.toList());
-        assertNotEquals(Lists.empty(),
+        this.checkNotEquals(Lists.empty(),
                 with,
                 () -> "All locales should have appeared in generated code\n" + generated);
     }

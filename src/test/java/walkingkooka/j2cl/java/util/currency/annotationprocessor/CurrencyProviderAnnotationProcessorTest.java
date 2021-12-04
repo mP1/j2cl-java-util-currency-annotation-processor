@@ -77,7 +77,10 @@ public final class CurrencyProviderAnnotationProcessorTest implements ClassTesti
 
     @Test
     public void testDefaultPublicConstructor() throws Exception {
-        assertEquals(JavaVisibility.PUBLIC, JavaVisibility.of(CurrencyProviderAnnotationProcessor.class.getConstructor()));
+        this.checkEquals(
+                JavaVisibility.PUBLIC,
+                JavaVisibility.of(CurrencyProviderAnnotationProcessor.class.getConstructor())
+        );
     }
 
     @Override
