@@ -67,7 +67,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
         CurrencyProviderTool.generate(locales,
                 Sets.empty(),
                 StringDataInputDataOutput.output(dataOutput::append),
-                Printers.sink().indenting(Indentation.with("  ")));
+                Printers.sink().indenting(Indentation.SPACES2));
 
         final DataInput data = StringDataInputDataOutput.input(dataOutput.toString());
         final int count = data.readInt();
