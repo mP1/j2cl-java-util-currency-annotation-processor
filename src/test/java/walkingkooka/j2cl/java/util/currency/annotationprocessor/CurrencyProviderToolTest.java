@@ -64,10 +64,13 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
 
     private void generateAndReadDataAndCheck(final Set<String> locales) throws Exception {
         final StringBuilder dataOutput = new StringBuilder();
-        CurrencyProviderTool.generate(locales,
+        CurrencyProviderTool.generate(
+                locales,
                 Sets.empty(),
                 StringDataInputDataOutput.output(dataOutput::append),
-                Printers.sink().indenting(Indentation.SPACES2));
+                Printers.sink(LineEnding.NONE)
+                        .indenting(Indentation.SPACES2)
+        );
 
         final DataInput data = StringDataInputDataOutput.input(dataOutput.toString());
         final int count = data.readInt();
