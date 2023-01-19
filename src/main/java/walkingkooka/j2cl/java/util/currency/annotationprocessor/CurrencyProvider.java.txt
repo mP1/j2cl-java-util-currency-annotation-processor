@@ -15,7 +15,7 @@
  *
  */
 
-package walkingkooka.j2cl.java.util.currency;
+package walkingkooka.j2cl.java.util.currency.generated;
 
 public final class CurrencyProvider {
 

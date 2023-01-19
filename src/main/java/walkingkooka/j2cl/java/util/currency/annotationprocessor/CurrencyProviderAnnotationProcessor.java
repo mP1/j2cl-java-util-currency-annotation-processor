@@ -75,6 +75,6 @@ public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnota
 
     @Override
     protected String generatedClassName() {
-        return "walkingkooka.j2cl.java.util.currency.CurrencyProvider";
+        return "walkingkooka.j2cl.java.util.currency.generated.CurrencyProvider";
     }
 }
