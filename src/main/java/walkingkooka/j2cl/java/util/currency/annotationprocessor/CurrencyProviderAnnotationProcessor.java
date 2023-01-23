@@ -72,9 +72,4 @@ public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnota
                 .filter(predicate)
                 .collect(Collectors.toCollection(Sets::sorted));
     }
-
-    @Override
-    protected String generatedClassName() {
-        return "walkingkooka.j2cl.java.util.currency.generated.CurrencyProvider";
-    }
 }
