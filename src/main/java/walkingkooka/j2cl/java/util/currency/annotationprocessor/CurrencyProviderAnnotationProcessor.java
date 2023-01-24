@@ -25,6 +25,7 @@ import walkingkooka.text.printer.IndentingPrinter;
 
 import java.io.DataOutput;
 import java.util.Currency;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -35,6 +36,12 @@ public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnota
     @Override
     protected Set<String> additionalArguments() {
         return Sets.of(CURRENCY_CODES_ANNOTATION_PROCESSOR_OPTION);
+    }
+
+    @Override
+    protected Optional<String> defaultValue(final Set<String> locales,
+                                            final Function<String, String> options) {
+        return Optional.empty();
     }
 
     /**
