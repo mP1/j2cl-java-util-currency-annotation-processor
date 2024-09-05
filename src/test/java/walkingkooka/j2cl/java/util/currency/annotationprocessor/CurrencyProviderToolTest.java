@@ -20,6 +20,7 @@ package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 import org.junit.jupiter.api.Test;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.set.Sets;
+import walkingkooka.collect.set.SortedSets;
 import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.reflect.ClassTesting;
@@ -300,7 +301,7 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                     return keep;
                 })
                 .map(Currency::getCurrencyCode)
-                .collect(Collectors.toCollection(Sets::sorted));
+                .collect(Collectors.toCollection(SortedSets::tree));
 
         this.checkEquals(true,
                 currencyCodeWithLocales.size() > 25,

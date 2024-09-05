@@ -19,6 +19,7 @@ package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;
+import walkingkooka.collect.set.SortedSets;
 import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
 import walkingkooka.j2cl.java.util.locale.support.LocaleSupport;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
@@ -158,7 +159,7 @@ public final class CurrencyProviderTool {
                     data,
                     comments);
 
-            final Set<Locale> locales = Sets.sorted(LocaleAwareAnnotationProcessorTool.LOCALE_COMPARATOR);
+            final Set<Locale> locales = SortedSets.tree(LocaleAwareAnnotationProcessorTool.LOCALE_COMPARATOR);
 
             for (final Locale possible : filteredLocales) {
                 try {
