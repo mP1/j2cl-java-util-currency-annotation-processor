@@ -18,6 +18,7 @@
 package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
 import walkingkooka.collect.set.Sets;
+import walkingkooka.collect.set.SortedSets;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessor;
 import walkingkooka.j2cl.locale.annotationprocessor.LocaleAwareAnnotationProcessorTool;
@@ -77,6 +78,6 @@ public final class CurrencyProviderAnnotationProcessor extends LocaleAwareAnnota
                 .stream()
                 .map(Currency::getCurrencyCode)
                 .filter(predicate)
-                .collect(Collectors.toCollection(Sets::sorted));
+                .collect(Collectors.toCollection(SortedSets::tree));
     }
 }

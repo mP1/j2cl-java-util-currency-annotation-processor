@@ -19,6 +19,7 @@ package walkingkooka.j2cl.java.util.currency.annotationprocessor;
 
 import org.junit.jupiter.api.Test;
 import walkingkooka.collect.set.Sets;
+import walkingkooka.collect.set.SortedSets;
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.text.CharSequences;
@@ -62,7 +63,7 @@ public final class CurrencyProviderAnnotationProcessorTest implements ClassTesti
                 Currency.getAvailableCurrencies()
                         .stream()
                         .map(Currency::getCurrencyCode)
-                        .collect(Collectors.toCollection(Sets::sorted)));
+                        .collect(Collectors.toCollection(SortedSets::tree)));
     }
 
     private void currencyCodesAndCheck(final String filter, final String... currencyCodes) {
