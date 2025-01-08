@@ -82,9 +82,9 @@ public final class CurrencyProviderTool {
     }
 
     private static void generate1(final Set<Locale> locales,
-                          final Set<String> currencyCodes,
-                          final DataOutput data,
-                          final IndentingPrinter comments) throws IOException {
+                                  final Set<String> currencyCodes,
+                                  final DataOutput data,
+                                  final IndentingPrinter comments) throws IOException {
         final Set<Currency> ignore = Sets.ordered();
         generateCurrenciesWithLocales(locales, ignore, data, comments);
         generateCurrenciesWithoutLocales(currencyCodes, locales, ignore, data, comments);
