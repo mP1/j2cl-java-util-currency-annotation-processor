@@ -149,7 +149,8 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
 
     @Test
     public void testCurrencyDEWildcard() throws Exception {
-        this.generateAndCheck("DE*",
+        this.generateAndCheck(
+                "DE*",
                 "",
                 "// currencyCode=CHF\n" +
                         "//   defaultFractionDigits=2\n" +
@@ -161,12 +162,13 @@ public final class CurrencyProviderToolTest implements ClassTesting<CurrencyProv
                         "//   defaultFractionDigits=2\n" +
                         "//   numericCode=978\n" +
                         "//   defaultSymbol=€\n" +
-                        "//   locales=de-AT, de-BE, de-DE, de-LU\n" +
+                        "//   locales=de-AT, de-BE, de-DE, de-IT, de-LU\n" +
                         "//   EUR=de-CH, de-LI\n" +
                         "// \n" +
                         "\n" +
                         "\n" +
-                        "2,CHF,2,756,CHF,2,de-CH,de-LI,0,EUR,2,978,€,4,de-AT,de-BE,de-DE,de-LU,1,EUR,2,de-CH,de-LI");
+                        "2,CHF,2,756,CHF,2,de-CH,de-LI,0,EUR,2,978,€,5,de-AT,de-BE,de-DE,de-IT,de-LU,1,EUR,2,de-CH,de-LI"
+        );
     }
 
     @Test
