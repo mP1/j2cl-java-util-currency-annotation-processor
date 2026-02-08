@@ -5,14 +5,11 @@
 ![](https://tokei.rs/b1/github/mP1/j2cl-java-util-currency-annotation-processor)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/mP1/j2cl-java-util-currency-annotation-processor.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mP1/j2cl-java-util-currency-annotation-processor/alerts/)
 
-
-
 # j2cl java-util-currency-annotation-processor
 
 An annotation processor that generates the `CurrencyProvider` used by the emulated `java.util.Currency` in 
 [j2cl-java-util-Currency](https://travis-ci.com/mP1/j2cl-java-util-Currency), to support most `Currency` features in javascript
 after building with [j2cl-maven-plugin](https://travis-ci.com/mP1/j2cl-maven-plugin).
-
 
 - Selects currencies for the given [locales](https://travis-ci.com/mP1/j2cl).
 - `walkingkooka.j2cl.java.util.Currency` csv of currency codes, with trailing wildcard support. 
@@ -26,12 +23,6 @@ after building with [j2cl-maven-plugin](https://travis-ci.com/mP1/j2cl-maven-plu
 
 For more details [click here](https://github.com/mP1/j2cl-locale)
 
-
-
 ## Unsupported features.
 
 See [j2cl-java-util-Currency](https://travis-ci.com/mP1/j2cl-java-util-Currency) for a more comprehensive summary.
-
-
-
-
